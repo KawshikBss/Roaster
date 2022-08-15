@@ -25,6 +25,13 @@ def addPost(request):
         data.save()
     return Response(data.data)
 
+@api_view(['PUT'])
+def updatePost(request, pk):
+    instancePost = Post.objects.get(id=pk)
+    data = PostSerializer(instance=instancePost, data=request.data)
+    if data.is_valid():
+        data.save()
+    return Response(data.data)
 
 @api_view(['DELETE'])
 def deletePost(request, pk):
