@@ -56,10 +56,16 @@ def addComment(request):
         data.save()
     return Response(data.data)
 
+@api_view(['PUT'])
+def updateComment(request, pk):
+    instanceComment = Comment.objects.get(id=pk)
+    data = CommentSerializer(instance=instanceComment, data=request.data)
+    if data.is_valid():
+        data.save()
+    return Response(data.data)
 
 @api_view(['DELETE'])
 def deleteComment(request, pk):
     data = Comment.objects.get(id=pk)
-    tmpData = data
     data.delete()
-    return Response(tmpData.data)
+    return Response()
