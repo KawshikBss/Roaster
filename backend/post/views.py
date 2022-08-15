@@ -1,7 +1,7 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from .models import Post
-from .serializers import PostSerializer
+from .models import Post, Comment
+from .serializers import PostSerializer, CommentSerializer
 
 
 @api_view(['GET'])
@@ -26,9 +26,40 @@ def addPost(request):
     return Response(data.data)
 
 
-@api_view(['GET'])
+@api_view(['DELETE'])
 def deletePost(request, pk):
     data = Post.objects.get(id=pk)
+    tmpData = data
+    data.delete()
+    return Response(tmpData.data)
+
+
+
+@api_view(['GET'])
+def getAllComments(request):
+    comments = Comment.objects.all()
+    data = CommentSerializer(comments, many=True)
+    return Response(data.data)
+
+
+@api_view(['GET'])
+def getSingleComment(request, pk):
+    comments = Comment.objects.get(id=pk)
+    data = CommentSerializer(comments)
+    return Response(data.data)
+
+
+@api_view(['POST'])
+def addComment(request):
+    data = CommentSerializer(data=request.data)
+    if data.is_valid():
+        data.save()
+    return Response(data.data)
+
+
+@api_view(['DELETE'])
+def deleteComment(request, pk):
+    data = Comment.objects.get(id=pk)
     tmpData = data
     data.delete()
     return Response(tmpData.data)
